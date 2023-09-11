@@ -20,9 +20,9 @@ import openpyxl
 
 import secure
 
-from sflib import SpiderLab
+from sllib import SpiderLab
 
-from sfscan import startSpiderLabScanner
+from scan import startSpiderLabScanner
 
 from spiderlab import SpiderLabDb
 from spiderlab import SpiderLabHelpers
@@ -69,8 +69,8 @@ class SpiderLabWebUi:
         # now with any configuration which may have previously been saved.
         self.defaultConfig = deepcopy(config)
         dbh = SpiderLabDb(self.defaultConfig, init=True)
-        sf = SpiderLab(self.defaultConfig)
-        self.config = sf.configUnserialize(dbh.configGet(), self.defaultConfig)
+        sl = SpiderLab(self.defaultConfig)
+        self.config = sl.configUnserialize(dbh.configGet(), self.defaultConfig)
 
         # Set up logging
         if loggingQueue is None:
@@ -810,8 +810,8 @@ class SpiderLabWebUi:
             return self.error(f"Error loading config from scan: {id}")
 
         modlist = scanconfig['_modulesenabled'].split(',')
-        if "sfp__stor_stdout" in modlist:
-            modlist.remove("sfp__stor_stdout")
+        if "slp__stor_stdout" in modlist:
+            modlist.remove("slp__stor_stdout")
 
         targetType = SpiderLabHelpers.targetTypeFromString(scantarget)
         if not targetType:
@@ -869,8 +869,8 @@ class SpiderLabWebUi:
                 return self.error("Something went wrong internally.")
 
             modlist = scanconfig['_modulesenabled'].split(',')
-            if "sfp__stor_stdout" in modlist:
-                modlist.remove("sfp__stor_stdout")
+            if "slp__stor_stdout" in modlist:
+                modlist.remove("slp__stor_stdout")
 
             targetType = SpiderLabHelpers.targetTypeFromString(scantarget)
             if targetType is None:
@@ -1001,8 +1001,8 @@ class SpiderLabWebUi:
         Returns:
             str: Configuration settings
         """
-        sf = SpiderLab(self.config)
-        conf = sf.configSerialize(self.config)
+        sl = SpiderLab(self.config)
+        conf = sl.configSerialize(self.config)
         content = ""
 
         for opt in sorted(conf):
@@ -1132,9 +1132,9 @@ class SpiderLabWebUi:
 
             # Make a new config where the user options override
             # the current system config.
-            sf = SpiderLab(self.config)
-            self.config = sf.configUnserialize(cleanopts, currentopts)
-            dbh.configSet(sf.configSerialize(self.config))
+            sl = SpiderLab(self.config)
+            self.config = sl.configUnserialize(cleanopts, currentopts)
+            dbh.configSet(sl.configSerialize(self.config))
         except Exception as e:
             return self.error(f"Processing one or more of your inputs failed: {e}")
 
@@ -1174,9 +1174,9 @@ class SpiderLabWebUi:
 
             # Make a new config where the user options override
             # the current system config.
-            sf = SpiderLab(self.config)
-            self.config = sf.configUnserialize(cleanopts, currentopts)
-            dbh.configSet(sf.configSerialize(self.config))
+            sl = SpiderLab(self.config)
+            self.config = sl.configUnserialize(cleanopts, currentopts)
+            dbh.configSet(sl.configSerialize(self.config))
         except Exception as e:
             return json.dumps(["ERROR", f"Processing one or more of your inputs failed: {e}"]).encode('utf-8')
 
@@ -1414,7 +1414,7 @@ class SpiderLabWebUi:
 
         # Snapshot the current configuration to be used by the scan
         cfg = deepcopy(self.config)
-        sf = SpiderLab(cfg)
+        sl = SpiderLab(cfg)
 
         modlist = list()
 
@@ -1427,14 +1427,14 @@ class SpiderLabWebUi:
             typesx = typelist.replace('type_', '').split(',')
 
             # 1. Find all modules that produce the requested types
-            modlist = sf.modulesProducing(typesx)
+            modlist = sl.modulesProducing(typesx)
             newmods = deepcopy(modlist)
             newmodcpy = deepcopy(newmods)
 
             # 2. For each type those modules consume, get modules producing
             while len(newmodcpy) > 0:
-                for etype in sf.eventsToModules(newmodcpy):
-                    xmods = sf.modulesProducing([etype])
+                for etype in sl.eventsToModules(newmodcpy):
+                    xmods = sl.modulesProducing([etype])
                     for mod in xmods:
                         if mod not in modlist:
                             modlist.append(mod)
@@ -1457,13 +1457,13 @@ class SpiderLabWebUi:
             return self.error("Invalid request: no modules specified for scan.")
 
         # Add our mandatory storage module
-        if "sfp__stor_db" not in modlist:
-            modlist.append("sfp__stor_db")
+        if "slp__stor_db" not in modlist:
+            modlist.append("slp__stor_db")
         modlist.sort()
 
         # Delete the stdout module in case it crept in
-        if "sfp__stor_stdout" in modlist:
-            modlist.remove("sfp__stor_stdout")
+        if "slp__stor_stdout" in modlist:
+            modlist.remove("slp__stor_stdout")
 
         # Start running a new scan
         if targetType in ["HUMAN_NAME", "USERNAME", "BITCOIN_ADDRESS"]:
