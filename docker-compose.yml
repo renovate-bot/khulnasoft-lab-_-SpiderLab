@@ -1,0 +1,15 @@
+version: "3"
+services:
+  spiderlab:
+    build:
+      context: ./
+    volumes:
+      - spiderlab-data:/var/lib/spiderlab
+    image: spiderlab
+    container_name: spiderlab
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+volumes:
+  spiderlab-data:

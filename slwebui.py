@@ -447,7 +447,7 @@ class SpiderLabWebUi:
                 if row[4] == "ROOT":
                     continue
                 lastseen = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(row[0]))
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 rows.append([lastseen, str(row[4]), str(row[3]), str(row[2]), row[13], datafield])
 
             fname = "SpiderLab.xlsx"
@@ -465,7 +465,7 @@ class SpiderLabWebUi:
                 if row[4] == "ROOT":
                     continue
                 lastseen = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(row[0]))
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 parser.writerow([lastseen, str(row[4]), str(row[3]), str(row[2]), row[13], datafield])
 
             fname = "SpiderLab.csv"
@@ -509,7 +509,7 @@ class SpiderLabWebUi:
                 if row[4] == "ROOT":
                     continue
                 lastseen = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(row[0]))
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 rows.append([scaninfo[row[12]][0], lastseen, str(row[4]), str(row[3]),
                             str(row[2]), row[13], datafield])
 
@@ -532,7 +532,7 @@ class SpiderLabWebUi:
                 if row[4] == "ROOT":
                     continue
                 lastseen = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(row[0]))
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 parser.writerow([scaninfo[row[12]][0], lastseen, str(row[4]), str(row[3]),
                                 str(row[2]), row[13], datafield])
 
@@ -572,7 +572,7 @@ class SpiderLabWebUi:
             for row in data:
                 if row[10] == "ROOT":
                     continue
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 rows.append([row[0], str(row[10]), str(row[3]), str(row[2]), row[11], datafield])
             cherrypy.response.headers['Content-Disposition'] = "attachment; filename=SpiderLab.xlsx"
             cherrypy.response.headers['Content-Type'] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -587,7 +587,7 @@ class SpiderLabWebUi:
             for row in data:
                 if row[10] == "ROOT":
                     continue
-                datafield = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                datafield = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 parser.writerow([row[0], str(row[10]), str(row[3]), str(row[2]), row[11], datafield])
             cherrypy.response.headers['Content-Disposition'] = "attachment; filename=SpiderLab.csv"
             cherrypy.response.headers['Content-Type'] = "application/csv"
@@ -620,7 +620,7 @@ class SpiderLabWebUi:
 
             for row in dbh.scanResultEvent(id):
                 lastseen = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(row[0]))
-                event_data = str(row[1]).replace("<SFURL>", "").replace("</SFURL>", "")
+                event_data = str(row[1]).replace("<SLURL>", "").replace("</SLURL>", "")
                 source_data = str(row[2])
                 source_module = str(row[3])
                 event_type = row[4]
